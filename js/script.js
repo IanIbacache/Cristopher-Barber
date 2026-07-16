@@ -138,23 +138,32 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }, 5000);
 
-    // 7. Contact Form submission (prevent default for demo)
+    // 7. Contact Form submission (Redirect to WhatsApp)
     const contactForm = document.getElementById('contact-form');
     if(contactForm) {
         contactForm.addEventListener('submit', (e) => {
             e.preventDefault();
-            // Simulate sending
-            const btn = contactForm.querySelector('button[type="submit"]');
-            const originalText = btn.innerText;
-            btn.innerText = 'Enviando...';
-            btn.disabled = true;
             
-            setTimeout(() => {
-                alert('¡Gracias por tu reserva! Nos pondremos en contacto pronto.');
-                btn.innerText = originalText;
-                btn.disabled = false;
-                contactForm.reset();
-            }, 1500);
+            // Get form values
+            const name = document.getElementById('name').value;
+            const email = document.getElementById('email').value;
+            const serviceSelect = document.getElementById('service');
+            const service = serviceSelect.options[serviceSelect.selectedIndex].text;
+            const message = document.getElementById('message').value;
+            
+            // Construct WhatsApp message
+            let whatsappText = `Hola, mi nombre es ${name}.\nMe gustaría agendar un servicio de *${service}*.\nMi correo es: ${email}.`;
+            
+            if (message.trim() !== "") {
+                whatsappText += `\n\nMensaje adicional:\n${message}`;
+            }
+            
+            // Redirect to WhatsApp
+            const whatsappUrl = `https://wa.me/56954196551?text=${encodeURIComponent(whatsappText)}`;
+            window.open(whatsappUrl, '_blank');
+            
+            // Reset form
+            contactForm.reset();
         });
     }
 });
